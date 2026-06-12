@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Adn\'t</string>
+    <string name="accessibility_service_description">Automatically skips ads across all applications by clicking skip and close buttons.</string>
+</resources>
