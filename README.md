@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Adnt AdBlocker
 
 Adnt is a high-performance ad-blocking and privacy protection application for Android. It combines network-level DNS filtering with an intelligent accessibility-based ad-skipper to provide a comprehensive ad-free experience across the entire operating system.
@@ -42,3 +43,7 @@ Adnt is a high-performance ad-blocking and privacy protection application for An
 ## Disclaimer
 
 This application is intended for personal use and privacy protection. Users should be aware that some applications may have Terms of Service that prohibit the use of ad-blocking software.
+=======
+# adn-t
+system-wide ad-blocking and privacy tool for Android that provides a premium, ad-free experience without requiring root access.
+>>>>>>> f5b93dd3c6143514e66752577443178e8218d121
