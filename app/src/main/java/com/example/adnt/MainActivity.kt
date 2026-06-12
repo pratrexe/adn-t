@@ -19,6 +19,7 @@ import kotlinx.coroutines.delay
 import com.example.adnt.data.SettingsManager
 import com.example.adnt.ui.screens.DashboardScreen
 import com.example.adnt.ui.screens.SettingsScreen
+import com.example.adnt.ui.screens.AppExclusionScreen
 import com.example.adnt.ui.theme.AdntTheme
 import com.example.adnt.ui.viewmodels.VpnViewModel
 import com.example.adnt.vpn.AdntVpnService
@@ -71,10 +72,16 @@ class MainActivity : ComponentActivity() {
                             currentScreen = "settings"
                         }
                     )
-                } else {
+                } else if (currentScreen == "settings") {
                     SettingsScreen(
                         settingsManager = settingsManager,
-                        onBack = { currentScreen = "dashboard" }
+                        onBack = { currentScreen = "dashboard" },
+                        onAppExclusion = { currentScreen = "exclusion" }
+                    )
+                } else {
+                    AppExclusionScreen(
+                        settingsManager = settingsManager,
+                        onBack = { currentScreen = "settings" }
                     )
                 }
             }

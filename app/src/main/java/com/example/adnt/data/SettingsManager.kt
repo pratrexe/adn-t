@@ -15,6 +15,7 @@ class SettingsManager(context: Context) {
         const val KEY_TRACKERS_COUNT = "trackers_count"
         const val KEY_DATA_SAVED = "data_saved"
         const val KEY_RECENT_BLOCKED = "recent_blocked"
+        const val KEY_EXCLUDED_APPS = "excluded_apps"
         
         const val DNS_GOOGLE = "8.8.8.8"
         const val DNS_CLOUDFLARE = "1.1.1.1"
@@ -52,6 +53,18 @@ class SettingsManager(context: Context) {
     var recentBlocked: String
         get() = prefs.getString(KEY_RECENT_BLOCKED, "") ?: ""
         set(value) = prefs.edit().putString(KEY_RECENT_BLOCKED, value).apply()
+
+    var excludedApps: Set<String>
+        get() = prefs.getString(KEY_EXCLUDED_APPS, "")?.split(",")?.filter { it.isNotEmpty() }?.toSet() ?: emptySet()
+        set(value) = prefs.edit().putString(KEY_EXCLUDED_APPS, value.joinToString(",")).apply()
+
+    fun addExcludedApp(packageName: String) {
+        excludedApps = excludedApps + packageName
+    }
+
+    fun removeExcludedApp(packageName: String) {
+        excludedApps = excludedApps - packageName
+    }
 
     fun addBlockedDomain(domain: String, isTracker: Boolean) {
         blockedCount++

@@ -17,7 +17,8 @@ import com.example.adnt.data.SettingsManager
 @Composable
 fun SettingsScreen(
     settingsManager: SettingsManager,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    onAppExclusion: () -> Unit
 ) {
     var blockTrackers by remember { mutableStateOf(settingsManager.blockTrackers) }
     var startOnBoot by remember { mutableStateOf(settingsManager.startOnBoot) }
@@ -67,6 +68,17 @@ fun SettingsScreen(
                     settingsManager.blockTrackers = it
                 }
             )
+
+            Spacer(modifier = Modifier.height(16.dp))
+            
+            Button(
+                onClick = onAppExclusion,
+                modifier = Modifier.fillMaxWidth(),
+                shape = MaterialTheme.shapes.medium,
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondaryContainer, contentColor = MaterialTheme.colorScheme.onSecondaryContainer)
+            ) {
+                Text("Manage Excluded Apps (Split Tunneling)")
+            }
 
             Spacer(modifier = Modifier.height(16.dp))
 

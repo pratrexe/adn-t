@@ -56,6 +56,17 @@ class AdntVpnService : VpnService() {
         val dns = settings.dnsProvider
         
         val builder = Builder()
+        
+        // Add split tunneling exclusions
+        val excluded = settings.excludedApps
+        for (app in excluded) {
+            try {
+                builder.addDisallowedApplication(app)
+            } catch (e: Exception) {
+                Log.w(TAG, "Could not exclude app: $app", e)
+            }
+        }
+
         vpnInterface = builder
             .addAddress("10.0.0.2", 32)
             .addRoute("10.0.0.0", 8) // Only route the VPN's own network to capture DNS
@@ -63,7 +74,7 @@ class AdntVpnService : VpnService() {
             .setSession("Adnt AdBlocker")
             .establish()
         
-        Log.i(TAG, "VPN Interface established (DNS: $dns)")
+        Log.i(TAG, "VPN Interface established (DNS: $dns, Excluded: ${excluded.size})")
     }
 
     private fun runPacketLoop() {
