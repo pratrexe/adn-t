@@ -1,6 +1,7 @@
 package com.example.adnt.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
+import com.example.adnt.data.SettingsManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,12 +22,12 @@ class VpnViewModel : ViewModel() {
         _uiState.value = _uiState.value.copy(isEnabled = !_uiState.value.isEnabled)
     }
 
-    // Mock function to simulate blocking for UI demo
-    fun simulateBlock(domain: String) {
-        val current = _uiState.value
-        _uiState.value = current.copy(
-            blockedCount = current.blockedCount + 1,
-            recentBlocked = (listOf(domain) + current.recentBlocked).take(10)
+    fun refreshStats(settingsManager: SettingsManager) {
+        _uiState.value = _uiState.value.copy(
+            blockedCount = settingsManager.blockedCount,
+            trackersCount = settingsManager.trackersCount,
+            dataSavedMb = settingsManager.dataSaved.toDouble(),
+            recentBlocked = settingsManager.recentBlocked.split(",").filter { it.isNotEmpty() }
         )
     }
 }

@@ -35,6 +35,29 @@ fun DashboardScreen(
     onOpenAccessibilitySettings: () -> Unit,
     onOpenSettings: () -> Unit
 ) {
+    var showDisclaimer by remember { mutableStateOf(false) }
+
+    if (showDisclaimer) {
+        AlertDialog(
+            onDismissRequest = { showDisclaimer = false },
+            title = { Text("Accessibility Permission") },
+            text = { Text("this is an important setting to make this app work for youtube services (which still have some bugs) if you don't want to give asccessibilty permisssion it's ok but it won't work with youtube") },
+            confirmButton = {
+                Button(onClick = {
+                    showDisclaimer = false
+                    onOpenAccessibilitySettings()
+                }) {
+                    Text("Continue")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDisclaimer = false }) {
+                    Text("Cancel")
+                }
+            }
+        )
+    }
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -62,7 +85,7 @@ fun DashboardScreen(
             Spacer(modifier = Modifier.height(24.dp))
 
             Button(
-                onClick = onOpenAccessibilitySettings,
+                onClick = { showDisclaimer = true },
                 shape = RoundedCornerShape(16.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer, contentColor = MaterialTheme.colorScheme.onTertiaryContainer),
                 modifier = Modifier.fillMaxWidth().height(56.dp)

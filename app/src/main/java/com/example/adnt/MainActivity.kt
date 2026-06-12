@@ -14,6 +14,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.LaunchedEffect
+import kotlinx.coroutines.delay
 import com.example.adnt.data.SettingsManager
 import com.example.adnt.ui.screens.DashboardScreen
 import com.example.adnt.ui.screens.SettingsScreen
@@ -43,6 +45,14 @@ class MainActivity : ComponentActivity() {
             val state by viewModel.uiState.collectAsState()
             var currentScreen by remember { mutableStateOf("dashboard") }
             
+            // Periodically refresh stats
+            LaunchedEffect(Unit) {
+                while (true) {
+                    viewModel.refreshStats(settingsManager)
+                    delay(2000) // Refresh every 2 seconds
+                }
+            }
+
             AdntTheme {
                 if (currentScreen == "dashboard") {
                     DashboardScreen(

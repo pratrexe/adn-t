@@ -67,6 +67,7 @@ class AdntVpnService : VpnService() {
     }
 
     private fun runPacketLoop() {
+        val settings = SettingsManager(this)
         val inputStream = FileInputStream(vpnInterface?.fileDescriptor)
         val outputStream = FileOutputStream(vpnInterface?.fileDescriptor)
         val packet = ByteBuffer.allocate(32768)
@@ -79,8 +80,7 @@ class AdntVpnService : VpnService() {
                 if (domain != null) {
                     if (BlockListManager.shouldBlock(domain)) {
                         Log.i(TAG, "Blocking domain: $domain")
-                        // In a real DNS blocker, you'd send an NXDOMAIN response here.
-                        // For this simple version, we drop the DNS query.
+                        settings.addBlockedDomain(domain, domain.contains("track") || domain.contains("analytics"))
                         continue 
                     } else {
                         Log.d(TAG, "Allowing domain: $domain")
