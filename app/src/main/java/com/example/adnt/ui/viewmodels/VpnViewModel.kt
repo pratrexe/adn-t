@@ -23,11 +23,23 @@ class VpnViewModel : ViewModel() {
     }
 
     fun refreshStats(settingsManager: SettingsManager) {
-        _uiState.value = _uiState.value.copy(
-            blockedCount = settingsManager.blockedCount,
-            trackersCount = settingsManager.trackersCount,
-            dataSavedMb = settingsManager.dataSaved.toDouble(),
-            recentBlocked = settingsManager.recentBlocked.split(",").filter { it.isNotEmpty() }
-        )
+        val current = _uiState.value
+        val newBlocked = settingsManager.blockedCount
+        val newTrackers = settingsManager.trackersCount
+        val newData = settingsManager.dataSaved.toDouble()
+        val newRecent = settingsManager.recentBlocked.split(",").filter { it.isNotEmpty() }
+
+        if (current.blockedCount != newBlocked || 
+            current.trackersCount != newTrackers || 
+            current.dataSavedMb != newData || 
+            current.recentBlocked != newRecent) {
+            
+            _uiState.value = current.copy(
+                blockedCount = newBlocked,
+                trackersCount = newTrackers,
+                dataSavedMb = newData,
+                recentBlocked = newRecent
+            )
+        }
     }
 }

@@ -23,6 +23,7 @@ fun SettingsScreen(
     var blockTrackers by remember { mutableStateOf(settingsManager.blockTrackers) }
     var startOnBoot by remember { mutableStateOf(settingsManager.startOnBoot) }
     var dnsProvider by remember { mutableStateOf(settingsManager.dnsProvider) }
+    var hardcoreMode by remember { mutableStateOf(settingsManager.hardcoreMode) }
 
     Scaffold(
         topBar = {
@@ -58,6 +59,18 @@ fun SettingsScreen(
             HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
 
             SettingsCategory("Ad-Blocking")
+
+            SettingsToggleItem(
+                title = "Hardcore Mode",
+                subtitle = "Aggressive ad-blocking. May break some apps.",
+                checked = hardcoreMode,
+                onCheckedChange = { 
+                    hardcoreMode = it
+                    settingsManager.hardcoreMode = it
+                }
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
 
             SettingsToggleItem(
                 title = "Block Trackers",

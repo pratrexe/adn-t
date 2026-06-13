@@ -53,9 +53,25 @@ class AdntVpnService : VpnService() {
 
     private fun setupVpn() {
         val settings = SettingsManager(this)
-        val dns = settings.dnsProvider
+        val isHardcore = settings.hardcoreMode
         
         val builder = Builder()
+        
+        if (isHardcore) {
+            // Triple-layer aggressive DNS
+            builder.addDnsServer("94.140.14.14") // AdGuard
+            builder.addDnsServer("45.90.28.0")   // NextDNS
+            builder.addDnsServer("76.76.2.2")    // Control D
+            Log.i(TAG, "VPN established in HARDCORE MODE")
+        } else {
+            val dns = if (settings.dnsProvider == SettingsManager.DNS_GOOGLE) {
+                SettingsManager.DNS_ADGUARD 
+            } else {
+                settings.dnsProvider
+            }
+            builder.addDnsServer(dns)
+            Log.i(TAG, "VPN established in Normal Mode (DNS: $dns)")
+        }
         
         // Add split tunneling exclusions
         val excluded = settings.excludedApps
@@ -70,11 +86,8 @@ class AdntVpnService : VpnService() {
         vpnInterface = builder
             .addAddress("10.0.0.2", 32)
             .addRoute("10.0.0.0", 8) // Only route the VPN's own network to capture DNS
-            .addDnsServer(dns)
             .setSession("Adnt AdBlocker")
             .establish()
-        
-        Log.i(TAG, "VPN Interface established (DNS: $dns, Excluded: ${excluded.size})")
     }
 
     private fun runPacketLoop() {

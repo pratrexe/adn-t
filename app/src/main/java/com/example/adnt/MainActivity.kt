@@ -49,8 +49,12 @@ class MainActivity : ComponentActivity() {
             // Periodically refresh stats
             LaunchedEffect(Unit) {
                 while (true) {
-                    viewModel.refreshStats(settingsManager)
-                    delay(2000) // Refresh every 2 seconds
+                    try {
+                        viewModel.refreshStats(settingsManager)
+                    } catch (e: Exception) {
+                        // Ignore refresh errors
+                    }
+                    delay(1000) // Refresh every 1 second for better responsiveness
                 }
             }
 

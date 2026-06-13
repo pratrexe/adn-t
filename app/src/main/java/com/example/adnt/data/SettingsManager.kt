@@ -11,6 +11,7 @@ class SettingsManager(context: Context) {
         const val KEY_DNS_PROVIDER = "dns_provider"
         const val KEY_START_ON_BOOT = "start_on_boot"
         const val KEY_THEME_MODE = "theme_mode"
+        const val KEY_HARDCORE_MODE = "hardcore_mode"
         const val KEY_BLOCKED_COUNT = "blocked_count"
         const val KEY_TRACKERS_COUNT = "trackers_count"
         const val KEY_DATA_SAVED = "data_saved"
@@ -37,6 +38,10 @@ class SettingsManager(context: Context) {
     var themeMode: String
         get() = prefs.getString(KEY_THEME_MODE, "Auto") ?: "Auto"
         set(value) = prefs.edit().putString(KEY_THEME_MODE, value).apply()
+
+    var hardcoreMode: Boolean
+        get() = prefs.getBoolean(KEY_HARDCORE_MODE, false)
+        set(value) = prefs.edit().putBoolean(KEY_HARDCORE_MODE, value).apply()
 
     var blockedCount: Int
         get() = prefs.getInt(KEY_BLOCKED_COUNT, 0)
@@ -67,12 +72,16 @@ class SettingsManager(context: Context) {
     }
 
     fun addBlockedDomain(domain: String, isTracker: Boolean) {
-        blockedCount++
-        if (isTracker) trackersCount++
-        dataSaved += 0.1f // Estimate 100KB saved per blocked ad
-        
-        val currentList = recentBlocked.split(",").filter { it.isNotEmpty() }.toMutableList()
-        currentList.add(0, domain)
-        recentBlocked = currentList.take(10).joinToString(",")
+        prefs.edit().apply {
+            putInt(KEY_BLOCKED_COUNT, blockedCount + 1)
+            if (isTracker) putInt(KEY_TRACKERS_COUNT, trackersCount + 1)
+            putFloat(KEY_DATA_SAVED, dataSaved + 0.1f)
+            
+            val currentList = recentBlocked.split(",").filter { it.isNotEmpty() }.toMutableList()
+            currentList.add(0, domain)
+            putString(KEY_RECENT_BLOCKED, currentList.take(10).joinToString(","))
+            
+            apply()
+        }
     }
 }
